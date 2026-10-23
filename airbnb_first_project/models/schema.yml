@@ -1,16 +1,25 @@
 models:
   - name: dim_listings_cleansed
+    description: Cleansed table of Airnbn listings.
+    data_tests:
+      - minimum_row_count:
+          arguments:
+            min_rows: 1000
+        
     columns:
       - name: listing_id
+        description: Unique identifier for each listing.
         data_tests:
           - not_null
           - unique
 
       - name: listing_name
+        description: Name of the listing.
         data_tests:
           - not_null
 
       - name: host_id
+        description: Unique identifier for the host of the listing. Refers to dim hosts table.
         data_tests:
           - not_null
           - relationships:
@@ -19,27 +28,44 @@ models:
                 field: host_id
 
       - name: room_type
+        description: Type of room for the listing.
         data_tests:
           - accepted_values:
               arguments:
                 values: ['Entire home/apt', 'Private room', 'Shared room', 'Hotel room']
 
+      - name: minimum_nights
+        data_tests:
+          - positive_values
+
   - name: dim_hosts_cleansed
+    config: 
+      contract:
+        enforced: true
     columns:
       - name: host_id
+        data_type: integer
         data_tests:
           - not_null
           - unique
       
       - name: host_name
+        data_type: string
         data_tests:
           - not_null
 
       - name: is_superhost
+        data_type: boolean
         data_tests:
           - accepted_values:
               arguments:
                 values: ['True','False']
+      
+      - name: updated_at
+        data_type: timestamp
+
+      - name: created_at
+        data_type: timestamp
 
   - name: fact_reviews
     columns:
