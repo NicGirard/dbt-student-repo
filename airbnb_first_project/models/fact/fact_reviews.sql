@@ -13,5 +13,5 @@ SELECT {{dbt_utils.generate_surrogate_key(['s.listing_id', 's.review_date','s.re
 FROM src_reviews s
 WHERE s.review_text IS NOT NULL
 {% if is_incremental() %}
-    AND s.review_date > (SELECT MAX(s.review_date) FROM {{ this }})
+    AND s.review_date > (SELECT MAX(review_date) FROM {{ this }})
 {% endif %}
